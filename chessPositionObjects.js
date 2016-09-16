@@ -1,0 +1,35 @@
+var puzzle1 = {
+	initialSetup: {
+		whiteQueen: {type: "queen", square: "square_b7", color: "white"},
+		whiteKing: {type: "king", square: "square_e6", color: "white"},
+		blackKing: {type: "king", square: "square_e8", color: "black"}
+	},
+	sequenceOfMoves: {
+		1: {
+			whiteQueen: {previousSquare: "square_b7", newSquare: "square_e7"}
+		}
+	}
+};
+
+var puzzle2 = {
+	initialSetup: {
+		whiteRook: {type: "rook", square: "square_a1", color: "white"},
+		whiteKing: {type: "king", square: "square_e6", color: "white"},
+		blackKing: {type: "king", square: "square_e8", color: "black"}
+	},
+	sequenceOfMoves: {
+		1: {
+			whiteRook: {previousSquare: "square_a1", newSquare: "square_a7"}
+		},
+		2: {
+			whiteRook: {previousSquare: "square_a7", newSquare: "square_a8"}
+		}
+	}
+};
+
+startingPosition = {
+	initialSetup:{
+
+	},
+	sequenceOfMoves: {}
+}
