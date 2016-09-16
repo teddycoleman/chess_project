@@ -1,3 +1,8 @@
+function Game(){
+	this.board = new Board();
+	this.scoreBoard = new scoreBoard();
+}
+
 function Board(){
 	this.pieceLocations = {};
 	this.solution = {};
@@ -50,16 +55,41 @@ function Piece(type, color, square, name){
 	this.name = name;
 }
 
-var board1 = new Board();
-board1.createBoardLayout(puzzle1);
-board1.squareSelected = 'square_b7'
-board1.targetSquare = 'square_e7'
-board1.movePiece(board1.squareSelected,board1.targetSquare);
-board1.clearBoard();
-board1.createBoardLayout(puzzle2);
-board1.squareSelected = 'square_a1'
-board1.targetSquare = 'square_a7'
-board1.movePiece(board1.squareSelected,board1.targetSquare);
-board1.squareSelected = 'square_a7'
-board1.targetSquare = 'square_a8'
-board1.movePiece(board1.squareSelected,board1.targetSquare);
+function scoreBoard(){
+	this.score = 0; 
+	this.notation = {};
+	this.displayNotation = function(){
+		//TO DO when implementing front end
+	}
+	this.displayScore = function(){
+		//TO DO when implenenting front end
+	}
+	this.resetNotation = function(){
+		this.notation = {};
+	}
+	this.updateNotation = function(moveCounter, move){
+		this.notation[moveCounter] = move;
+	}
+	this.addScore = function(){
+		this.score += 1; 
+	}
+	this.resetScore = function(){
+		this.score = 0; 
+	}
+}
+
+
+var game = new Game();
+game.board.createBoardLayout(puzzle1);
+game.board.squareSelected = 'square_b7'
+game.board.targetSquare = 'square_e7'
+game.board.movePiece(game.board.squareSelected,game.board.targetSquare);
+game.board.clearBoard();
+game.board.createBoardLayout(puzzle2);
+game.board.squareSelected = 'square_a1'
+game.board.targetSquare = 'square_a7'
+game.board.movePiece(game.board.squareSelected,game.board.targetSquare);
+game.board.squareSelected = 'square_a7'
+game.board.targetSquare = 'square_a8'
+game.board.movePiece(game.board.squareSelected,game.board.targetSquare);
+
