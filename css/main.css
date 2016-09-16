@@ -1,0 +1,49 @@
+.square{
+	display: inline-block;
+	height: 40px;
+	width: 40px;
+	border: 1px solid black;
+	margin: 0;
+	overflow: hidden;
+}
+
+.row{
+	height: 42px;	
+}
+
+.light_square{
+	background-color: white;
+}
+
+.dark_square{
+	background-color: green;
+}
+
+.piece{
+	font-size: 30px;
+	position: relative;
+	left: 5px;
+	top: -3px;
+	width: 100%;
+	size: 100%;
+	margin: 0 auto;
+}
+
+.board{
+	width: 400px;
+	display: inline-block;
+	margin-left: 10px;
+}
+
+.notation{
+	display: inline-block;
+	vertical-align: top;
+}
+
+h1{
+	margin-left: 10px;
+}
+
+h2{
+	margin: 0;
+}
