@@ -1,6 +1,30 @@
 function Game(){
 	this.board = new Board();
 	this.scoreBoard = new scoreBoard();
+
+	this.checkMoveForSolution = function(piece, square){
+		for (key in this.board.solution[this.board.moveCounter]){
+			if (square == this.board.solution[this.board.moveCounter][key].newSquare && piece == key){
+				this.board.moveCounter += 1;
+				console.log('thats the correct move');
+				return true;
+			}
+			else{
+				console.log('thats wrong!');
+				return false;
+			}
+		}
+	}
+	this.movePiece = function(oldSquare, newSquare){
+		this.board.pieceLocations[newSquare] = this.board.pieceLocations[oldSquare];
+		this.board.pieceLocations[oldSquare] = null;
+		this.board.pieceLocations[newSquare].square = newSquare;
+		if(Object.keys(this.board.solution).length > 0){
+			this.checkMoveForSolution(this.board.pieceLocations[newSquare].name,newSquare);
+		}
+		this.board.squareSelected = "";
+		this.board.targetSquare = "";
+	}	
 }
 
 function Board(){
@@ -23,29 +47,6 @@ function Board(){
 		this.squareSelected = "";
 		this.targetSquare = "";
 	}
-	this.checkMoveForSolution = function(piece, square){
-		for (key in this.solution[this.moveCounter]){
-			if (square == this.solution[this.moveCounter][key].newSquare && piece == key){
-				this.moveCounter += 1;
-				console.log('thats the correct move');
-				return true;
-			}
-			else{
-				console.log('thats wrong!');
-				return false;
-			}
-		}
-	}
-	this.movePiece = function(oldSquare, newSquare){
-		this.pieceLocations[newSquare] = this.pieceLocations[oldSquare];
-		this.pieceLocations[oldSquare] = null;
-		this.pieceLocations[newSquare].square = newSquare;
-		if(Object.keys(this.solution).length > 0){
-			this.checkMoveForSolution(this.pieceLocations[newSquare].name,newSquare);
-		}
-		this.squareSelected = "";
-		this.targetSquare = "";
-	}	
 }
 
 function Piece(type, color, square, name){
@@ -83,13 +84,13 @@ var game = new Game();
 game.board.createBoardLayout(puzzle1);
 game.board.squareSelected = 'square_b7'
 game.board.targetSquare = 'square_e7'
-game.board.movePiece(game.board.squareSelected,game.board.targetSquare);
+game.movePiece(game.board.squareSelected,game.board.targetSquare);
 game.board.clearBoard();
 game.board.createBoardLayout(puzzle2);
 game.board.squareSelected = 'square_a1'
 game.board.targetSquare = 'square_a7'
-game.board.movePiece(game.board.squareSelected,game.board.targetSquare);
+game.movePiece(game.board.squareSelected,game.board.targetSquare);
 game.board.squareSelected = 'square_a7'
 game.board.targetSquare = 'square_a8'
-game.board.movePiece(game.board.squareSelected,game.board.targetSquare);
+game.movePiece(game.board.squareSelected,game.board.targetSquare);
 
