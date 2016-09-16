@@ -181,7 +181,6 @@ function dragover_handler(ev) {
 
 function drop_handler(ev) {
   ev.preventDefault();
-  console.log("Drop");
   var piece = boardObject[ev.dataTransfer.getData("text")];
   var newSquare;
   if(ev.target.getAttribute("id")){
@@ -195,8 +194,6 @@ function drop_handler(ev) {
 }
 
 function dragend_handler(ev) {
-  console.log("dragEnd");
-  // Remove all of the drag data
   ev.dataTransfer.clearData();
 }
 
@@ -206,7 +203,6 @@ function checkLegalMove(element){
 
 function initiateBoard(){
 	createBoard();
-	// placePiecesInInitialPosition();
 	createIntialPieces();
 }
 
