@@ -38,10 +38,11 @@ function Piece(type, color, square){
 	this.color = color;
 	this.square = square;
 	this.pieceAlive = true;
-	this.elementInDOM = document.createElement('div');
-	this.elementInDOM.textContent = convertPieceToUnicode(this.color + this.type.charAt(0).toUpperCase() + this.type.slice(1));
+	this.elementInDOM = document.createElement('img');
+	this.img = getImgForElement(color + type);
+	this.elementInDOM.setAttribute('src',this.img);
 	this.elementInDOM.setAttribute("draggable","true");
-	this.elementInDOM.setAttribute("class",type + " piece " + color);
+	this.elementInDOM.setAttribute("class",type + " piece " + color + " " + color + type);
 	this.elementInDOM.setAttribute("ondragstart","dragstart_handler(event)");
 	this.elementInDOM.setAttribute("ondragend","dragend_handler(event)");
 }
@@ -126,43 +127,43 @@ function createIntialPieces(){
 	blackPawn8.movePiece('square_h7');	
 }
 
-function convertPieceToUnicode(pieceType){
+function getImgForElement(pieceType){
 	switch(pieceType) {
-    case "whiteKing":
-        return "\u2654";
+    case "whiteking":
+        return "img/Chess_klt60.png";
         break;
-    case "whiteQueen":
-        return "\u2655";
+    case "whitequeen":
+        return "img/Chess_qlt60.png";
         break;
-    case "whiteRook":
-        return "\u2656";
+    case "whiterook":
+        return "img/Chess_rlt60.png";
         break;
-    case "whiteBishop":
-        return "\u2657";
+    case "whitebishop":
+        return "img/Chess_blt60.png";
         break;
-    case "whiteKnight":
-        return "\u2658";
+    case "whiteknight":
+        return "img/Chess_nlt60.png";
         break;
-    case "whitePawn":
-        return "\u2659";
+    case "whitepawn":
+        return "img/Chess_plt60.png";
         break;
-    case "blackKing":
-        return "\u265A";
+    case "blackking":
+        return "img/Chess_kdt60.png";
         break;
-    case "blackQueen":
-        return "\u265B";
+    case "blackqueen":
+        return "img/Chess_qdt60.png";
         break;
-    case "blackRook":
-        return "\u265C";
+    case "blackrook":
+        return "img/Chess_rdt60.png";
         break;
-    case "blackBishop":
-        return "\u265D";
+    case "blackbishop":
+        return "img/Chess_bdt60.png";
         break;
-    case "blackKnight":
-        return "\u265E";
+    case "blackknight":
+        return "img/Chess_ndt60.png";
         break;
-    case "blackPawn":
-        return "\u265F";
+    case "blackpawn":
+        return "img/Chess_pdt60.png";
         break;
     default:
         console.log('error - could not convert piece');
