@@ -37,80 +37,93 @@ function Piece(type, color, square){
 	this.type = type;
 	this.color = color;
 	this.square = square;
-	this.elementInDOM;
+	this.pieceAlive = true;
+	this.elementInDOM = document.createElement('div');
+	this.elementInDOM.textContent = convertPieceToUnicode(this.color + this.type.charAt(0).toUpperCase() + this.type.slice(1));
+	this.elementInDOM.setAttribute("draggable","true");
+	this.elementInDOM.setAttribute("class",type + " piece " + color);
+	this.elementInDOM.setAttribute("ondragstart","dragstart_handler(event)");
+	this.elementInDOM.setAttribute("ondragend","dragend_handler(event)");
 }
 
-function placePiecesInInitialPosition(){
-	placePiece("whiteRook", "square_a1", false);
-	placePiece("whiteKnight", "square_b1", false);
-	placePiece("whiteBishop", "square_c1", false);
-	placePiece("whiteQueen", "square_d1", false);
-	placePiece("whiteKing", "square_e1", false);
-	placePiece("whiteBishop", "square_f1", false);
-	placePiece("whiteKnight", "square_g1", false);
-	placePiece("whiteRook", "square_h1", false);
-	placePiece("whitePawn", "square_a2", false);
-	placePiece("whitePawn", "square_b2", false);
-	placePiece("whitePawn", "square_c2", false);
-	placePiece("whitePawn", "square_d2", false);
-	placePiece("whitePawn", "square_e2", false);
-	placePiece("whitePawn", "square_f2", false);
-	placePiece("whitePawn", "square_g2", false);
-	placePiece("whitePawn", "square_h2", false);
-	placePiece("blackRook", "square_a8", false);
-	placePiece("blackKnight", "square_b8", false);
-	placePiece("blackBishop", "square_c8", false);
-	placePiece("blackQueen", "square_d8", false);
-	placePiece("blackKing", "square_e8", false);
-	placePiece("blackBishop", "square_f8", false);
-	placePiece("blackKnight", "square_g8", false);
-	placePiece("blackRook", "square_h8", false);
-	placePiece("blackPawn", "square_a7", false);
-	placePiece("blackPawn", "square_b7", false);
-	placePiece("blackPawn", "square_c7", false);
-	placePiece("blackPawn", "square_d7", false);
-	placePiece("blackPawn", "square_e7", false);
-	placePiece("blackPawn", "square_f7", false);
-	placePiece("blackPawn", "square_g7", false);
-	placePiece("blackPawn", "square_h7", false);
+Piece.prototype.movePiece = function(newSquare){
+	boardObject[this.square] = null;
+	boardObject[newSquare] = this;
+	this.newSquareElement = document.getElementById(newSquare);
+	if (this.newSquareElement.childNodes[0]){
+		this.newSquareElement.childNodes[0].pieceAlive = false;
+		this.newSquareElement.removeChild(this.newSquareElement.childNodes[0]);
+	}
+	this.newSquareElement.appendChild(this.elementInDOM);
+	this.square = newSquare;
 }
 
-function placePiece(pieceType, newChessSquare, origChessSquare){
-	//function creates a piece element and appends it to the DOM 
-	//AND appends it to the boardObject element
-
-	//add piece to the boardObject element
-	boardObject[newChessSquare] = pieceType;
-	if (origChessSquare){
-		boardObject[origChessSquare] = null;
-	}
-
-	//if it's a new piece, create element and add it to the DOM
-	if(!origChessSquare){
-		var newChessSquare = document.getElementById(newChessSquare);
-		var newChessPiece = document.createElement('div');
-		var chessTextContent = convertPieceToUnicode(pieceType);
-		newChessPiece.textContent = chessTextContent;
-		//capture other piece if it exists on the same square
-		if(newChessSquare.childNodes[0]){
-			newChessSquare.removeChild(newChessSquare.childNodes[0]);
-		}
-		newChessPiece.setAttribute("class",pieceType + " piece " + pieceType.substring(0,5));
-		newChessPiece.setAttribute("draggable","true");
-		newChessPiece.setAttribute("ondragstart","dragstart_handler(event)");
-		newChessPiece.setAttribute("ondragend","dragend_handler(event)");
-		newChessSquare.appendChild(newChessPiece);
-	}
-	//if it's an existing piece, grab the element and move it within the DOM
-	else{
-		var chessPieceToMove = document.getElementById(origChessSquare).childNodes[0];
-		var newChessSquare = document.getElementById(newChessSquare);
-		//capture other piece if it exists on the same square
-		if(newChessSquare.childNodes[0]){
-			newChessSquare.removeChild(newChessSquare.childNodes[0]);
-		}
-		newChessSquare.appendChild(chessPieceToMove);
-	}
+function createIntialPieces(){
+	var whiteRook1 = new Piece("rook","white","square_a1");
+	whiteRook1.movePiece('square_a1');
+	var whiteRook2 = new Piece("rook","white","square_h1");
+	whiteRook2.movePiece('square_h1');
+	var whiteKnight1 = new Piece("knight","white","square_b1");
+	whiteKnight1.movePiece('square_b1');
+	var whiteKnight2 = new Piece("knight","white","square_g1");
+	whiteKnight2.movePiece('square_g1');
+	var whiteBishop1 = new Piece("bishop","white","square_c1");
+	whiteBishop1.movePiece('square_c1');
+	var whiteBishop2 = new Piece("bishop","white","square_f1");
+	whiteBishop2.movePiece('square_f1');
+	var whiteKing = new Piece("king","white","square_e1");
+	whiteKing.movePiece('square_e1');
+	var whiteQueen1 = new Piece("queen","white","square_d1");
+	whiteQueen1.movePiece('square_d1');
+	var whitePawn1 = new Piece("pawn","white","square_a2");
+	whitePawn1.movePiece('square_a2');
+	var whitePawn2 = new Piece("pawn","white","square_b2");
+	whitePawn2.movePiece('square_b2');
+	var whitePawn3 = new Piece("pawn","white","square_c2");
+	whitePawn3.movePiece('square_c2');
+	var whitePawn4 = new Piece("pawn","white","square_d2");
+	whitePawn4.movePiece('square_d2');
+	var whitePawn5 = new Piece("pawn","white","square_e2");
+	whitePawn5.movePiece('square_e2');
+	var whitePawn6 = new Piece("pawn","white","square_f2");
+	whitePawn6.movePiece('square_f2');
+	var whitePawn7 = new Piece("pawn","white","square_g2");
+	whitePawn7.movePiece('square_g2');
+	var whitePawn8 = new Piece("pawn","white","square_h2");
+	whitePawn8.movePiece('square_h2');
+	var blackRook1 = new Piece("rook","black","square_a8");
+	blackRook1.movePiece('square_a8');
+	var blackRook2 = new Piece("rook","black","square_h8");
+	blackRook2.movePiece('square_h8');
+	var blackKnight1 = new Piece("knight","black","square_b8");
+	blackKnight1.movePiece('square_b8');
+	var blackKnight2 = new Piece("knight","black","square_g8");
+	blackKnight2.movePiece('square_g8');
+	var blackBishop1 = new Piece("bishop","black","square_c8");
+	blackBishop1.movePiece('square_c8');
+	var blackBishop2 = new Piece("bishop","black","square_f8");
+	blackBishop2.movePiece('square_f8');
+	var blackKing = new Piece("king","black","square_e8");
+	blackKing.movePiece('square_e8');
+	var blackQueen1 = new Piece("queen","black","square_d8");
+	blackQueen1.movePiece('square_d8');
+	var blackPawn1 = new Piece("pawn","black","square_a7");
+	blackPawn1.movePiece('square_a7');
+	var blackPawn2 = new Piece("pawn","black","square_b7");
+	blackPawn2.movePiece('square_b7');
+	var blackPawn3 = new Piece("pawn","black","square_c7");
+	blackPawn3.movePiece('square_c7');
+	var blackPawn4 = new Piece("pawn","black","square_d7");
+	blackPawn4.movePiece('square_d7');
+	var blackPawn5 = new Piece("pawn","black","square_e7");
+	blackPawn5.movePiece('square_e7');
+	var blackPawn6 = new Piece("pawn","black","square_f7");
+	blackPawn6.movePiece('square_f7');
+	var blackPawn7 = new Piece("pawn","black","square_g7");
+	blackPawn7.movePiece('square_g7');
+	var blackPawn8 = new Piece("pawn","black","square_h7");
+	// boardObject[blackPawn8.square] = blackPawn8;
+	blackPawn8.movePiece('square_h7');	
 }
 
 function convertPieceToUnicode(pieceType){
@@ -168,8 +181,7 @@ function dragover_handler(ev) {
 function drop_handler(ev) {
   ev.preventDefault();
   console.log("Drop");
-  var origSquare = ev.dataTransfer.getData("text");
-  var piece = boardObject[origSquare];
+  var piece = boardObject[ev.dataTransfer.getData("text")];
   var newSquare;
   if(ev.target.getAttribute("id")){
   	newSquare = ev.target.getAttribute("id");
@@ -178,7 +190,7 @@ function drop_handler(ev) {
   {
   	newSquare = ev.target.parentNode.getAttribute("id");
   }
-  placePiece(piece, newSquare, origSquare);
+  piece.movePiece(newSquare);
 }
 
 function dragend_handler(ev) {
@@ -193,7 +205,8 @@ function checkLegalMove(element){
 
 function initiateBoard(){
 	createBoard();
-	placePiecesInInitialPosition();
+	// placePiecesInInitialPosition();
+	createIntialPieces();
 }
 
 initiateBoard();
