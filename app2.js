@@ -62,12 +62,13 @@ function Game(){
 	//Loads next puzzle on button click in the screen
 	this.loadNextPuzzle = function(){
 		this.board.clearBoard();
+		this.scoreBoard.resetNotation();
 		if(puzzlesArray.length > 0){
 			var nextPuzzle = puzzlesArray.pop();
 			this.board.createBoardLayout(nextPuzzle);
 		}
 		else{
-			this.board.createBoardLayout(startingPosition);
+			this.displayFinalResult();
 		}
 	}
 
@@ -76,12 +77,17 @@ function Game(){
 		this.board.clearBoard();
 		this.scoreBoard.resetScoreBoard();
 		this.board.createBoardLayout(startingPosition);
-		puzzlesArray = [puzzle1,puzzle2];
+		puzzlesArray = [puzzle1,puzzle2,puzzle3];
+		$('.board').show();
+		$('.scoreBoard').show();
+		$('.result').hide();
 	}
 
-	//
+	//Displays final result for the game
 	this.displayFinalResult = function(){
-
+		$('.board').hide();
+		$('.scoreBoard').hide();
+		$('.result').show();
 	}
 }
 
@@ -202,16 +208,34 @@ function ScoreBoard(){
 	this.score = {correctPuzzles: 0, badGuesses: 0}; 
 	this.notation = {};
 	this.displayNotation = function(moveCounter){
+		//Add a new row and # if it's white's move
 		if(this.notation[moveCounter].color == 'white'){
 			var moveNumber = Math.floor(moveCounter / 2) + 1;
 			$('#notationBody tr:last').after("<tr><td>"+ moveNumber+"</td></tr>");
 		}
-		var notationElement = this.notation[moveCounter].piece.charAt(5) + this.notation[moveCounter].newSquare.slice(-2);
+		var notationElement = this.createNotationElement(moveCounter); 
 		$('#notationBody tr:last').append("<td>"+ notationElement +"</td>");
 	}
+	//Function to handle edge cases in creating notation with pawns and knights
+	this.createNotationElement = function(moveCounter){
+		var pieceChar;
+		if(this.notation[moveCounter].piece.slice(5) == "Pawn"){
+			pieceChar = "";
+		}
+		else if (this.notation[moveCounter].piece.slice(5) == "Knight"){
+			pieceChar = "N";
+		}
+		else{
+			pieceChar = this.notation[moveCounter].piece.charAt(5);
+		}
+		return pieceChar + this.notation[moveCounter].newSquare.slice(-2);
+	}
+	//Function to display score on the scoreboard
 	this.displayScore = function(){
-		$('#score').text("Puzzles Solved : " + this.score.correctPuzzles);
+		$('#score').text("Correct Moves : " + this.score.correctPuzzles);
 		$('#misses').text("Misses : " + this.score.badGuesses);
+		$('#finalScore').text("Correct Moves : " + this.score.correctPuzzles);
+		$('#finalMisses').text("Misses : " + this.score.badGuesses);
 	}
 	this.updateNotation = function(moveObject){
 		this.notation[moveObject.moveCounter] = {
@@ -272,27 +296,16 @@ function dragendHandler(ev) {
 
 function resetGameHandler(ev){
 	game.resetGame();
+	$('#nextPuzzle').html("Start Game!");
 }
 
 function nextPuzzleHandler(ev){
 	game.loadNextPuzzle();
+	$('#nextPuzzle').html("Next Puzzle");
 }
 
 var game = new Game();
 game.board.drawSquares();
-$('#resetGame').on("click",resetGameHandler);
+$('.resetGame').on("click",resetGameHandler);
 $('#nextPuzzle').on("click",nextPuzzleHandler);
-game.loadNextPuzzle();
-// game.board.createBoardLayout(puzzle1);
-// game.board.squareSelected = 'square_b7'
-// game.board.targetSquare = 'square_e7'
-// game.movePiece(game.board.squareSelected,game.board.targetSquare);
-// game.board.clearBoard();
-// game.board.createBoardLayout(puzzle2);
-// game.board.squareSelected = 'square_a1'
-// game.board.targetSquare = 'square_a7'
-// game.movePiece(game.board.squareSelected,game.board.targetSquare);
-// game.board.squareSelected = 'square_a7'
-// game.board.targetSquare = 'square_a8'
-// game.movePiece(game.board.squareSelected,game.board.targetSquare);
-
+game.board.createBoardLayout(startingPosition);

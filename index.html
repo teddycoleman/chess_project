@@ -9,13 +9,15 @@
 	<script type='text/javascript' src='./chessPositionObjects.js'></script>
 </head>
 <body>
-	<header >
+	<header>
 		<h1>Chess Puzzle Trainer</h1>
 	</header>
 	<div class='board' id='board' >
 	</div>
-	<div class='scoreboard' id='scoreboard'>
-		<h2 id="score">Puzzles Solved : 0</h2> 
+	<div class='scoreBoard' id='scoreBoard'>
+		<button class='bottom' type="button" id="nextPuzzle">Start Game!</button>
+		<button class='bottom resetGame' type="button">Reset Game</button>
+		<h2 id="score">Correct Moves : 0</h2> 
 		<h2 id="misses">Misses : 0</h2> 
 		<table id="notation">
 			<tbody id="notationBody">
@@ -26,37 +28,13 @@
 				</tr>	
 			</tbody>
 		</table>
-
-		<button type="button" id="nextPuzzle">Next Puzzle</button>
-		<button type="button" id="resetGame">Reset Game</button>
 	</div>
-	<div call="result">
-		<table id="finalResult">
-			<thead>
-				<tr>
-					<th>Final Result:</th>
-				</tr>
-			</thead>
-		</table>
+	<div class="result">
+		<h1>Final Score - Good job!!</h1>
+		<h2 id="finalScore">Correct Moves : 0</h2>
+		<h2 id="finalMisses">Misses : 0</h2>
+		<button type="button" class="resetGame">Play again?</button>
 	</div>
 	<script src="./app2.js"></script>
 </body>
 </html>
-
-<!-- 
-Add code to: 
-
-3) Add a "begin" screen
-
-4) Have 3 problems in the backend
-
-5) Create object to hold moves on the board.  Have a back button to let you go back through those moves  
-
-6) change data struct to have piece be an object -> all piece <p> tags should have an id
-the object for a piece should reference that id.  the method for moving a piece
-should exist within the object for that piece. the "constructing piece" function should 
-also exist within it.  basically, the code should be object oriented 
-
-7) Switch to jquery??? 
-
--->
