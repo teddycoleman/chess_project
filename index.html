@@ -14,9 +14,30 @@
 	</header>
 	<div class='board' id='board' >
 	</div>
-	<div class='notation' id='notation'>
-		<h2> Notation </h2>
-		<p>I'll add some stuff here when I get to it</p>
+	<div class='scoreboard' id='scoreboard'>
+		<h2 id="score">Puzzles Solved : 0</h2> 
+		<h2 id="misses">Misses : 0</h2> 
+		<table id="notation">
+			<tbody id="notationBody">
+				<tr>
+					<th>Move</th>
+					<th>White</th>
+					<th>Black</th>
+				</tr>	
+			</tbody>
+		</table>
+
+		<button type="button" id="nextPuzzle">Next Puzzle</button>
+		<button type="button" id="resetGame">Reset Game</button>
+	</div>
+	<div call="result">
+		<table id="finalResult">
+			<thead>
+				<tr>
+					<th>Final Result:</th>
+				</tr>
+			</thead>
+		</table>
 	</div>
 	<script src="./app2.js"></script>
 </body>

@@ -29,6 +29,8 @@ var puzzle2 = {
 	whiteToMove: true
 };
 
+var puzzlesArray = [puzzle1,puzzle2];
+
 startingPosition = {
 	initialSetup:{
 		whiteRook1: {type: "rook", square: "square_a1", color: "white"},

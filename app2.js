@@ -11,26 +11,45 @@ function Game(){
 	this.checkMoveForSolution = function(piece, square){
 		for (key in this.board.solution[this.board.moveCounter]){
 			if (square == this.board.solution[this.board.moveCounter][key].newSquare && piece == key){
-				console.log('thats the correct move');
-				return true;
+				this.scoreBoard.addScore(true);
 			}
 			else{
-				console.log('thats wrong!');
-				return false;
+				this.scoreBoard.addScore(false);
 			}
 		}
 	}
 	//Move a piece based on the squares that the move the user has chosen
 	this.movePiece = function(oldSquare, newSquare){
+		//Do nothing if user drops piece on the original square
+		if(oldSquare != newSquare ){
+			this.movePieceInLocationsObject(oldSquare, newSquare);
+			this.movePieceInDOM(oldSquare, newSquare);
+			//Append move to the notation object and display
+			this.scoreBoard.updateNotation({
+				moveCounter: this.board.moveCounter,
+				piece: this.board.pieceLocations[newSquare].name,
+				oldSquare: oldSquare,
+				newSquare: newSquare,
+				color: this.board.pieceLocations[newSquare].color
+			});
+			this.scoreBoard.displayNotation(this.board.moveCounter);
+			//increase move counter and reset selections
+			this.board.moveCounter += 1;
+		}
+		this.board.squareSelected = "";
+		this.board.targetSquare = "";
+	}	
+
+	this.movePieceInLocationsObject = function (oldSquare, newSquare){
 		this.board.pieceLocations[newSquare] = this.board.pieceLocations[oldSquare];
 		this.board.pieceLocations[oldSquare] = null;
 		this.board.pieceLocations[newSquare].square = newSquare;
 		if(Object.keys(this.board.solution).length > 0){
 			this.checkMoveForSolution(this.board.pieceLocations[newSquare].name,newSquare);
 		}
-		//TO DO - fix this line of code to properly add the notation
-		this.scoreBoard.notation[this.board.moveCounter] = {oldSquare, newSquare};
-		//append piece to the DOM, remove a piece that's already there
+	}
+	//append piece to the DOM, remove a piece that's already there
+	this.movePieceInDOM = function(oldSquare, newSquare){
 		if($("#" + newSquare).children()[0]){
 			$("#" + newSquare).children()[0].remove();
 			$("#" + newSquare).append($("#" + oldSquare).children()[0]);
@@ -38,11 +57,32 @@ function Game(){
 		else{
 			$("#" + newSquare).append($("#" + oldSquare).children()[0]);
 		}
-		//increase move counter and reset selections
-		this.board.moveCounter += 1;
-		this.board.squareSelected = "";
-		this.board.targetSquare = "";
-	}	
+	}
+
+	//Loads next puzzle on button click in the screen
+	this.loadNextPuzzle = function(){
+		this.board.clearBoard();
+		if(puzzlesArray.length > 0){
+			var nextPuzzle = puzzlesArray.pop();
+			this.board.createBoardLayout(nextPuzzle);
+		}
+		else{
+			this.board.createBoardLayout(startingPosition);
+		}
+	}
+
+	//Resets the game after user is done
+	this.resetGame = function(){
+		this.board.clearBoard();
+		this.scoreBoard.resetScoreBoard();
+		this.board.createBoardLayout(startingPosition);
+		puzzlesArray = [puzzle1,puzzle2];
+	}
+
+	//
+	this.displayFinalResult = function(){
+
+	}
 }
 
 /* 
@@ -78,9 +118,11 @@ function Board(){
 	}
 	this.createBoardLayout = function(layout){
 		for (keys in layout.initialSetup){
+			//Create piece and add it to the pieceLocations object
 			var pieceName = layout.initialSetup[keys].color + layout.initialSetup[keys].type.charAt(0).toUpperCase() + layout.initialSetup[keys].type.slice(1);
 			var piece = new Piece(layout.initialSetup[keys].type,layout.initialSetup[keys].color,layout.initialSetup[keys].square, pieceName);
 			this.pieceLocations[layout.initialSetup[keys].square] = piece;
+			//Create DOM element and add it to the parent square
 			var pieceElement = $('<img src=' +piece.getImgForElement(piece.name)+' class="piece">'); 
 			$(pieceElement).attr("draggable","true");
 			$(pieceElement).attr("ondragstart","dragstartHandler(event)");
@@ -157,57 +199,90 @@ Scoreboard object maintains the score of the user's game AND
 displays the move history that the user has played out
 */
 function ScoreBoard(){
-	this.score = 0; 
+	this.score = {correctPuzzles: 0, badGuesses: 0}; 
 	this.notation = {};
-	this.displayNotation = function(){
-		//TO DO when implementing front end
+	this.displayNotation = function(moveCounter){
+		if(this.notation[moveCounter].color == 'white'){
+			var moveNumber = Math.floor(moveCounter / 2) + 1;
+			$('#notationBody tr:last').after("<tr><td>"+ moveNumber+"</td></tr>");
+		}
+		var notationElement = this.notation[moveCounter].piece.charAt(5) + this.notation[moveCounter].newSquare.slice(-2);
+		$('#notationBody tr:last').append("<td>"+ notationElement +"</td>");
 	}
 	this.displayScore = function(){
-		//TO DO when implenenting front end
+		$('#score').text("Puzzles Solved : " + this.score.correctPuzzles);
+		$('#misses').text("Misses : " + this.score.badGuesses);
+	}
+	this.updateNotation = function(moveObject){
+		this.notation[moveObject.moveCounter] = {
+			piece: moveObject.piece,
+			newSquare: moveObject.newSquare,
+			oldSquare: moveObject.oldSquare,
+			color: moveObject.color
+		};
+	}
+	this.addScore = function(correctMove){
+		if(correctMove){
+			this.score.correctPuzzles += 1; 
+		}
+		else{
+			this.score.badGuesses += 1; 
+		}
+		this.displayScore();
 	}
 	this.resetNotation = function(){
 		this.notation = {};
-	}
-	this.updateNotation = function(moveCounter, move){
-		this.notation[moveCounter] = move;
-	}
-	this.addScore = function(){
-		this.score += 1; 
+		$('tbody tr:gt(0)').remove();
 	}
 	this.resetScore = function(){
-		this.score = 0; 
+		this.score.correctPuzzles = 0; 
+		this.score.badGuesses = 0;
+		this.displayScore();
+	}
+	this.resetScoreBoard = function(){
+		this.resetNotation();
+		this.resetScore();
 	}
 }
 
 function dragstartHandler(ev) {
- game.board.squareSelected = $(ev.target).parent().attr("id");
- ev.effectAllowed = "move";
+	game.board.squareSelected = $(ev.target).parent().attr("id");
+	ev.effectAllowed = "move";
 }
 
 function dragoverHandler(ev) {
- ev.preventDefault();
+	ev.preventDefault();
 }
 
 function dropHandler(ev) {
-  ev.preventDefault();
-  if($(ev.target).attr("class") == "square"){
-  	game.board.targetSquare = $(ev.target).attr("id");
-  }
-  else
-  {
-  	game.board.targetSquare = $(ev.target).parent().attr("id");
-  }
-  game.movePiece(game.board.squareSelected,game.board.targetSquare);
+	ev.preventDefault();
+	if($(ev.target).attr("class") == "square"){
+		game.board.targetSquare = $(ev.target).attr("id");
+	}
+	else
+	{
+		game.board.targetSquare = $(ev.target).parent().attr("id");
+	}
+	game.movePiece(game.board.squareSelected,game.board.targetSquare);
 }
 
 function dragendHandler(ev) {
-  ev.dataTransfer.clearData();
+	//Nothing to do
 }
 
+function resetGameHandler(ev){
+	game.resetGame();
+}
+
+function nextPuzzleHandler(ev){
+	game.loadNextPuzzle();
+}
 
 var game = new Game();
 game.board.drawSquares();
-game.board.createBoardLayout(puzzle1);
+$('#resetGame').on("click",resetGameHandler);
+$('#nextPuzzle').on("click",nextPuzzleHandler);
+game.loadNextPuzzle();
 // game.board.createBoardLayout(puzzle1);
 // game.board.squareSelected = 'square_b7'
 // game.board.targetSquare = 'square_e7'
