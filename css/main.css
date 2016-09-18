@@ -52,6 +52,10 @@
 	height: 600px;
 }
 
+.scorekeeper .movekeeper{
+	margin: 10px 0 10px 0;
+}
+
 .block{
 	display: block;
 }

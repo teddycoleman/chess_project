@@ -23,7 +23,7 @@ function Game(){
 	//Move a piece based on the squares that the move the user has chosen
 	this.movePiece = function(oldSquare, newSquare){
 		//Do nothing if user drops piece on the original square
-		if(oldSquare != newSquare ){
+		if(this.isLegalMove(oldSquare, newSquare)){
 			this.movePieceInLocationsObject(oldSquare, newSquare);
 			this.movePieceInDOM(oldSquare, newSquare);
 			//Append move to the notation object and display
@@ -35,6 +35,8 @@ function Game(){
 				color: this.board.pieceLocations[newSquare].color
 			});
 			this.scoreBoard.displayNotation(this.board.moveCounter);
+			this.board.whiteToMove = (!this.board.whiteToMove);
+			this.board.displaySideToMove();
 			//increase move counter and reset selections
 			this.board.moveCounter += 1;
 		}
@@ -58,6 +60,26 @@ function Game(){
 		}
 		else{
 			$("#" + newSquare).append($("#" + oldSquare).children()[0]);
+		}
+	}
+
+	this.isLegalMove = function(oldSquare, newSquare){
+		if(oldSquare == newSquare){
+			return false;
+		}
+		else if(this.board.pieceLocations[oldSquare].color == "white" && this.board.whiteToMove == false){
+			return false;
+		}
+		else if(this.board.pieceLocations[oldSquare].color == "black" && this.board.whiteToMove == true){
+			return false;
+		}
+		else if (this.board.pieceLocations[newSquare]){
+			if(this.board.pieceLocations[oldSquare].color == this.board.pieceLocations[newSquare].color){
+				return false;
+			}
+		}
+		else{
+			return true;
 		}
 	}
 
@@ -157,6 +179,7 @@ function Board(){
 		}
 		this.solution = layout.sequenceOfMoves;
 		this.whiteToMove = layout.whiteToMove;
+		this.displaySideToMove();
 	}
 	this.clearBoard = function(eraseCurrentPuzzleSwitch){
 		this.eraseCurrentPuzzleSwitch = eraseCurrentPuzzleSwitch || false;
@@ -169,6 +192,10 @@ function Board(){
 		this.squareSelected = "";
 		this.targetSquare = "";
 		$(".piece").remove();
+	}
+	this.displaySideToMove = function(){
+		this.colorToMove = this.whiteToMove ? "White" : "Black";
+		$('.movekeeper').html(this.colorToMove + " to move");
 	}
 }
 
