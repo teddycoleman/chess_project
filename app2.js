@@ -1,3 +1,6 @@
+//Declare game as the single global variable
+var game;
+
 /*
 Game object is parent to both the board and the scoreboard.
 Game object takes care of listening to the actions of the player and then
@@ -6,7 +9,6 @@ manipulating the board and scoreboard.
 function Game(){
 	this.board = new Board();
 	this.scoreBoard = new ScoreBoard();
-
 	//Evaluate to see if the user's move matches the solution code
 	this.checkMoveForSolution = function(piece, square){
 		for (key in this.board.solution[this.board.moveCounter]){
@@ -38,7 +40,7 @@ function Game(){
 		}
 		this.board.squareSelected = "";
 		this.board.targetSquare = "";
-	}	
+	}
 
 	this.movePieceInLocationsObject = function (oldSquare, newSquare){
 		this.board.pieceLocations[newSquare] = this.board.pieceLocations[oldSquare];
@@ -64,8 +66,8 @@ function Game(){
 		this.board.clearBoard();
 		this.scoreBoard.resetNotation();
 		if(puzzlesArray.length > 0){
-			var nextPuzzle = puzzlesArray.pop();
-			this.board.createBoardLayout(nextPuzzle);
+			currentPuzzle = puzzlesArray.pop();
+			this.board.createBoardLayout(currentPuzzle);
 		}
 		else{
 			this.displayFinalResult();
@@ -78,9 +80,16 @@ function Game(){
 		this.scoreBoard.resetScoreBoard();
 		this.board.createBoardLayout(startingPosition);
 		puzzlesArray = [puzzle1,puzzle2,puzzle3];
-		$('.board').show();
-		$('.scoreBoard').show();
+		$('.board').hide();
+		$('.scoreBoard').hide();
 		$('.result').hide();
+		$('.instructions').show();
+	}
+
+	this.resetPuzzle = function(){
+		this.board.clearBoard(true);
+		this.scoreBoard.resetNotation();
+		this.board.createBoardLayout(this.board.currentPuzzle);
 	}
 
 	//Displays final result for the game
@@ -88,6 +97,14 @@ function Game(){
 		$('.board').hide();
 		$('.scoreBoard').hide();
 		$('.result').show();
+		$('.instructions').hide();
+	}
+
+	this.startGame = function(){
+		$('.board').show();
+		$('.scoreBoard').show();
+		$('.result').hide();
+		$('.instructions').hide();
 	}
 }
 
@@ -97,6 +114,7 @@ all the pieces.  Can be cleared and used to set up new positions.
 */
 function Board(){
 	this.pieceLocations = {};
+	this.currentPuzzle = {};
 	this.solution = {};
 	this.moveCounter = 1;
 	this.whiteToMove = true;
@@ -123,6 +141,7 @@ function Board(){
 		}
 	}
 	this.createBoardLayout = function(layout){
+		this.currentPuzzle = layout;
 		for (keys in layout.initialSetup){
 			//Create piece and add it to the pieceLocations object
 			var pieceName = layout.initialSetup[keys].color + layout.initialSetup[keys].type.charAt(0).toUpperCase() + layout.initialSetup[keys].type.slice(1);
@@ -139,7 +158,11 @@ function Board(){
 		this.solution = layout.sequenceOfMoves;
 		this.whiteToMove = layout.whiteToMove;
 	}
-	this.clearBoard = function(){
+	this.clearBoard = function(eraseCurrentPuzzleSwitch){
+		this.eraseCurrentPuzzleSwitch = eraseCurrentPuzzleSwitch || false;
+		if(eraseCurrentPuzzleSwitch){
+			this.resetCurrentPuzzle = {};
+		}
 		this.pieceLocations = {};
 		this.solution = {};
 		this.moveCounter = 1;
@@ -208,6 +231,10 @@ function ScoreBoard(){
 	this.score = {correctPuzzles: 0, badGuesses: 0}; 
 	this.notation = {};
 	this.displayNotation = function(moveCounter){
+		//Handle if it's black's move first
+		if(this.notation[moveCounter].color == 'black' && moveCounter == 1){
+			$('#notationBody tr:last').after("<tr><td>1</td><td>...</td></tr>");
+		}
 		//Add a new row and # if it's white's move
 		if(this.notation[moveCounter].color == 'white'){
 			var moveNumber = Math.floor(moveCounter / 2) + 1;
@@ -296,16 +323,33 @@ function dragendHandler(ev) {
 
 function resetGameHandler(ev){
 	game.resetGame();
-	$('#nextPuzzle').html("Start Game!");
 }
 
 function nextPuzzleHandler(ev){
 	game.loadNextPuzzle();
-	$('#nextPuzzle').html("Next Puzzle");
 }
 
-var game = new Game();
-game.board.drawSquares();
-$('.resetGame').on("click",resetGameHandler);
-$('#nextPuzzle').on("click",nextPuzzleHandler);
-game.board.createBoardLayout(startingPosition);
+function resetPuzzleHandler(ev){
+	game.resetPuzzle();
+}
+
+function startGameHandler(ev){
+	game.startGame();
+}
+
+function addEventListeners(){
+	$('.resetGame').on("click",resetGameHandler);
+	$('#resetPuzzle').on("click",resetPuzzleHandler);
+	$('.nextPuzzle').on("click",nextPuzzleHandler);
+	$('.startPuzzle').on("click",startGameHandler);
+}
+
+function gameInit(){
+	game = new Game();
+	game.board.drawSquares();
+	addEventListeners();
+	game.board.createBoardLayout(startingPosition);
+	game.resetGame();
+}
+
+gameInit();

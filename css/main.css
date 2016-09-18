@@ -40,7 +40,10 @@
 .board{
 	width: 650px;
 	display: inline-block;
-	margin-left: 10px;
+}
+
+.container{
+	min-width: 1250px;
 }
 
 .scoreBoard{
@@ -49,17 +52,23 @@
 	height: 600px;
 }
 
+.block{
+	display: block;
+}
+
 .result{
-	margin-left: 30px;
-	width: 800px;
-	border: 1px solid black;
-	display: none;
+	width: 500px;
 }
 
 h1{
-	margin-left: 10px;
+	font-size: 36px; 
 }
 
 h2{
 	margin: 0;
+}
+
+h5{
+	display: inline-block;
+	margin-right: 20px;
 }

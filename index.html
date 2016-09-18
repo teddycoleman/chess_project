@@ -9,32 +9,44 @@
 	<script type='text/javascript' src='./chessPositionObjects.js'></script>
 </head>
 <body>
-	<header>
-		<h1>Chess Puzzle Trainer</h1>
-	</header>
-	<div class='board' id='board' >
+	<div class='container'>
+		<header>
+			<h1>Chess Puzzle Trainer</h1>
+		</header>
+	
+		<div class='board' id='board' >
+		</div>
+		<div class='scoreBoard' id='scoreBoard'>
+			<button type="button" class="nextPuzzle">Next Puzzle</button>
+			<button type="button" id="resetPuzzle">Reset Puzzle</button>
+			<button class='resetGame' type="button">Reset Game</button>
+			<h2 id="score">Correct Moves : 0</h2> 
+			<h2 id="misses">Misses : 0</h2> 
+			<table id="notation" class="u-half-width">
+				<tbody id="notationBody">
+					<tr>
+						<th>No.</th>
+						<th>White</th>
+						<th>Black</th>
+					</tr>	
+				</tbody>
+			</table>
+		</div>
+		<div class="instructions">
+			<h4>Instructions:</h4>
+			<p>Welcome! This is a chess puzzle trainer.  When you start, each position is a critical point from a real game and challenges you to come up with the best move!  Drag/drop pieces to make the moves for both sides.  Each puzzle is 3 moves per side, leading to a clear checkmate.  Be careful though, any mistakes will count against your final score.  Press start to begin - best of luck!</p>
+			<p>In the game, click "Next Puzzle" to load the first puzzle and subsequent puzzles.  If you make a mistake and want to try again, click "Reset Puzzle".  If you'd like to reset the whole game, click "Reset Game".</p>
+			<p> Enjoy!</p>
+			<button class='startPuzzle' type="button">Start Game!</button>
+		</div>
+		<div class="result">
+			<h4>Final Score :</h4>
+			<h5 id="finalScore">Correct Moves : 0</h4>
+			<h5 id="finalMisses">Misses : 0</h5>
+			<button type="button" class="resetGame block">Play again?</button>
+		</div>
 	</div>
-	<div class='scoreBoard' id='scoreBoard'>
-		<button class='bottom' type="button" id="nextPuzzle">Start Game!</button>
-		<button class='bottom resetGame' type="button">Reset Game</button>
-		<h2 id="score">Correct Moves : 0</h2> 
-		<h2 id="misses">Misses : 0</h2> 
-		<table id="notation">
-			<tbody id="notationBody">
-				<tr>
-					<th>Move</th>
-					<th>White</th>
-					<th>Black</th>
-				</tr>	
-			</tbody>
-		</table>
-	</div>
-	<div class="result">
-		<h1>Final Score - Good job!!</h1>
-		<h2 id="finalScore">Correct Moves : 0</h2>
-		<h2 id="finalMisses">Misses : 0</h2>
-		<button type="button" class="resetGame">Play again?</button>
-	</div>
+
 	<script src="./app2.js"></script>
 </body>
 </html>

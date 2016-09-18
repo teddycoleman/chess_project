@@ -30,10 +30,9 @@
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 .container {
   position: relative;
-  width: 100%;
+  /*width: 100%;*/
   max-width: 960px;
   margin: 0 auto;
-  padding: 0 20px;
   box-sizing: border-box; }
 .column,
 .columns {
@@ -361,6 +360,9 @@ form {
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 .u-full-width {
   width: 100%;
+  box-sizing: border-box; }
+.u-half-width {
+  width: 50%;
   box-sizing: border-box; }
 .u-max-full-width {
   max-width: 100%;
