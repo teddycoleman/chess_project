@@ -77,6 +77,9 @@ function Game(){
 			if(this.board.pieceLocations[oldSquare].color == this.board.pieceLocations[newSquare].color){
 				return false;
 			}
+			else{
+				return true;
+			}
 		}
 		else{
 			return true;
