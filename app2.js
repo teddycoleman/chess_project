@@ -35,10 +35,14 @@ function Game(){
 				color: this.board.pieceLocations[newSquare].color
 			});
 			this.scoreBoard.displayNotation(this.board.moveCounter);
+			//Switch which side it is to move and display it
 			this.board.whiteToMove = (!this.board.whiteToMove);
 			this.board.displaySideToMove();
-			//increase move counter and reset selections
+			//Increase the move counter
 			this.board.moveCounter += 1;
+			if(this.board.moveCounter > Object.keys(this.board.solution).length && Object.keys(this.board.solution).length > 0){
+				$('.movekeeper').html("End of Puzzle");
+			}
 		}
 		this.board.squareSelected = "";
 		this.board.targetSquare = "";
@@ -77,7 +81,7 @@ function Game(){
 			if(this.board.pieceLocations[oldSquare].color == this.board.pieceLocations[newSquare].color){
 				return false;
 			}
-			else{
+			else{	
 				return true;
 			}
 		}
@@ -111,6 +115,7 @@ function Game(){
 		$('.instructions').show();
 	}
 
+	//Sends user back to the beginning of the puzzle they are currently on
 	this.resetPuzzle = function(){
 		this.board.clearBoard(true);
 		this.scoreBoard.resetNotation();
@@ -125,6 +130,7 @@ function Game(){
 		$('.instructions').hide();
 	}
 
+	//Show chess board and scoreboard
 	this.startGame = function(){
 		$('.board').show();
 		$('.scoreBoard').show();

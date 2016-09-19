@@ -64,8 +64,17 @@
 	width: 500px;
 }
 
+.logo{
+	display: inline-block;
+	position: relative;
+	height: 45px;
+	width: 40px;
+	top: 10px;
+}
+
 h1{
 	font-size: 36px; 
+	display: inline-block;
 }
 
 h2{
